@@ -66,7 +66,7 @@ func (d *Danmaku) Parse(data []byte) {
 	Get := func(place string) gjson.Result {
 		return gjson.Get(sb, place)
 	}
-	d = &Danmaku{
+	*d = Danmaku{
 		Mode:           Get("info.0.1").Int(),
 		FontSize:       Get("info.0.2").Int(),
 		Color:          Get("info.0.3").Int(),
