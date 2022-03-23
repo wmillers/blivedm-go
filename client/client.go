@@ -7,9 +7,9 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/Akegarasu/blivedm-go/packet"
 	"github.com/gorilla/websocket"
 	log "github.com/sirupsen/logrus"
+	"github.com/wmillers/blivedm-go/packet"
 )
 
 type Client struct {

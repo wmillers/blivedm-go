@@ -3,11 +3,12 @@ package client
 import (
 	"bytes"
 	"fmt"
-	"github.com/Akegarasu/blivedm-go/message"
-	"github.com/Akegarasu/blivedm-go/packet"
+	"runtime/debug"
+
 	log "github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
-	"runtime/debug"
+	"github.com/wmillers/blivedm-go/message"
+	"github.com/wmillers/blivedm-go/packet"
 )
 
 var (
