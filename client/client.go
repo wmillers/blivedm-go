@@ -54,7 +54,7 @@ func (c *Client) Start() {
 		for {
 			select {
 			case <-c.Done:
-				break
+				return
 			default:
 				msgType, data, err := c.conn.ReadMessage()
 				if err != nil {
@@ -96,7 +96,7 @@ func (c *Client) startHeartBeat() {
 	for {
 		select {
 		case <-c.Done:
-			break
+			return
 		case <-time.After(30 * time.Second):
 			if err := c.conn.WriteMessage(websocket.BinaryMessage, pkt); err != nil {
 				c.LogFatal(err)
@@ -133,7 +133,7 @@ func LogFatal(v ...interface{}) {
 }
 
 func (c *Client) Stop() {
-	close(c.Done)
+	c.Done <- struct{}{}
 }
 
 func getDanmuInfo(roomID string) (*DanmuInfo, error) {
