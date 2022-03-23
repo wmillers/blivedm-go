@@ -5,9 +5,10 @@ import (
 	"compress/zlib"
 	"encoding/binary"
 	"encoding/json"
+	"io"
+
 	"github.com/andybalholm/brotli"
 	log "github.com/sirupsen/logrus"
-	"io"
 )
 
 const (
@@ -56,7 +57,7 @@ func NewPacketFromBytes(data []byte) Packet {
 	packLen := binary.BigEndian.Uint32(data[0:4])
 	// 校验包长度
 	if int(packLen) != len(data) {
-		log.Fatal("error packet")
+		LogFatal("error packet")
 	}
 	pv := binary.BigEndian.Uint16(data[6:8])
 	op := binary.BigEndian.Uint32(data[8:12])
