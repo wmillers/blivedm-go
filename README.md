@@ -2,6 +2,15 @@
 
 bilibili 直播弹幕 golang 库
 
+## 这是一个 fork 项目，修改了原有项目的几个问题
+原 repo : `github.com/Akegaras/blivedm-go/`
+现 repo： `github.com/wmillers/blivedm-go/`
+
+更改的地方：
+ - 修改了 `Danmaku struct` 以及对应 `Parse` 解析方法的内容，扩充了支持的信息
+ - 使用 `Client.Done` (chan) 来控制模块的退出`close(c.Done)`（对应实现了`c.Stop()`），并且将原有代码中所有使用`Log.Fatal`相关函数都替换为不会导致整个程序退出的`LogFatal`。`Log.Fatal`会直接调用`os.Exit`结束所有的 goroutine，且无法被捕获。
+
+
 ## 安装
 ```shell
 go get github.com/Akegarasu/blivedm-go
@@ -23,7 +32,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/Akegarasu/blivedm-go/client"
+	"github.com/Akegaras/blivedm-go/client"
 	"github.com/Akegarasu/blivedm-go/message"
 	"github.com/tidwall/gjson"
 )
