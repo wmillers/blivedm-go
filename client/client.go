@@ -133,7 +133,7 @@ func LogFatal(v ...interface{}) {
 }
 
 func (c *Client) Stop() {
-	c.Done <- struct{}{}
+	close(c.Done)
 }
 
 func getDanmuInfo(roomID string) (*DanmuInfo, error) {
