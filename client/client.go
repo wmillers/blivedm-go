@@ -1,6 +1,7 @@
 package client
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -19,15 +20,18 @@ type Client struct {
 	host                string
 	eventHandlers       *eventHandlers
 	customEventHandlers *customEventHandlers
-	Done                chan struct{}
+	done                <-chan struct{}
+	cancelFunc          context.CancelFunc
 }
 
 func NewClient(roomID string) *Client {
+	ctx, cancel := context.WithCancel(context.Background())
 	return &Client{
 		roomID:              roomID,
 		eventHandlers:       &eventHandlers{},
 		customEventHandlers: &customEventHandlers{},
-		Done:                make(chan struct{}),
+		done:                ctx.Done(),
+		cancelFunc:          cancel,
 	}
 }
 
@@ -53,7 +57,7 @@ func (c *Client) Start() {
 	go func() {
 		for {
 			select {
-			case <-c.Done:
+			case <-c.done:
 				return
 			default:
 				msgType, data, err := c.conn.ReadMessage()
@@ -95,7 +99,7 @@ func (c *Client) startHeartBeat() {
 	pkt := packet.NewHeartBeatPacket()
 	for {
 		select {
-		case <-c.Done:
+		case <-c.done:
 			return
 		case <-time.After(30 * time.Second):
 			if err := c.conn.WriteMessage(websocket.BinaryMessage, pkt); err != nil {
@@ -133,7 +137,7 @@ func LogFatal(v ...interface{}) {
 }
 
 func (c *Client) Stop() {
-	close(c.Done)
+	c.cancelFunc()
 }
 
 func getDanmuInfo(roomID string) (*DanmuInfo, error) {
